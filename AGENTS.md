@@ -1,3 +1,174 @@
+# CareThread — Project Context for Agents
+
+## Purpose
+CareThread is a hospital patient-records web app with role-based access control. **All data here is fake and for demonstration only.**
+
+## Permission Matrix
+| Data | Admin | Receptionist | Doctor | Nurse | Patient/Guardian |
+|---|---|---|---|---|---|
+| Accounts & roles | RW | none | none | none | none |
+| Patient basics | R | RW | R | R | R own + dependents |
+| Families & relationships | R | RW | R | R | R own relationships |
+| Visits & diagnoses | none | none | RW | R | R own + dependents |
+| Vitals | none | none | RW | RW | R own + dependents |
+| Medicine cycles | none | none | RW | RW | R own + dependents |
+| Family medical history | none | none | RW | R | R own + dependents |
+| AI summaries | none | none | RW | RW | none |
+
+## Stack
+- **Frontend**: Next.js 16 (App Router, TypeScript), Tailwind CSS v4, shadcn/ui
+- **Backend**: Next.js Server Components, Server Actions, Route Handlers
+- **Database & Auth**: Supabase (Postgres + Auth + RLS + Realtime)
+- **AI**: Gemini via `@google/genai`, server-side only (Phase 3)
+- **Hosting**: Vercel (app), Supabase Cloud (database)
+
+## Design System — Warm Editorial SaaS
+> Full spec: `../DESIGN.md` (one level above `carethread/`)
+
+The UI follows a **Warm Editorial** aesthetic (Japandi meets Swiss graphic design). These rules are **mandatory** for all frontend work:
+
+| Token | Value | Usage |
+|---|---|---|
+| Canvas | `#F6F7ED` (Warm Ivory) | Page background |
+| Surface | `#FFFFFF` | Cards, modals, sidebar |
+| Surface-dim | `#EDEDE5` | Secondary containers, sand cards |
+| Muted surface | `#F4F4F4` | Icon backgrounds, hover fills |
+| Primary text | `#1F1F1F` | Headers, values, active states |
+| Secondary text | `#767676` | Labels, metadata, passive copy |
+| Tertiary text | `#A3A3A3` | Placeholders, disabled, micro-labels |
+| Border | `#E6E6DC` | 1px hairline dividers on all cards |
+| Inverted card | `#1F1F1F` bg + `#FFFFFF` text | Primary stat cards, active pills |
+
+**Typography**: Plus Jakarta Sans — `700` display, `600` headlines/stats, `500` labels, `400` body.
+
+**Shapes**:
+- Cards: `rounded-2xl` (16px)
+- Buttons: `rounded-full` pill shape
+- Badges / status pills: `rounded-full`
+- Icon containers: `rounded-xl` (12px)
+
+**Elevation** (no heavy drop shadows):
+- Level 0: `#F6F7ED` canvas
+- Level 1: `#FFFFFF` card + `border border-[#E6E6DC]` hairline
+- Level 2: `#1F1F1F` inverted card + `shadow-[0_8px_24px_-4px_rgba(31,31,31,0.12)]`
+- Modals: `shadow-[0_16px_32px_-8px_rgba(31,31,31,0.12)]`
+
+**Stat deck pattern**:
+```tsx
+// Primary stat — inverted charcoal
+<Card className="border-[#E6E6DC] rounded-2xl bg-[#1F1F1F] shadow-[0_8px_24px_-4px_rgba(31,31,31,0.12)]">
+  <CardContent className="pt-6 pb-6 px-6">
+    <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-[#A3A3A3]">{label}</p>
+    <p className="stat-md text-white">{value}</p>
+  </CardContent>
+</Card>
+
+// Secondary stat — white surface
+<Card className="border-[#E6E6DC] rounded-2xl bg-white hover:shadow-[0_4px_16px_-4px_rgba(31,31,31,0.08)] transition-shadow">
+  ...
+</Card>
+```
+
+**Button hierarchy**:
+- Primary CTA: `rounded-full bg-[#1F1F1F] hover:bg-[#333] text-white font-semibold`
+- Secondary: `rounded-full border-[#E6E6DC] bg-white hover:bg-[#F4F4F4] text-[#1F1F1F]`
+- Ghost link: `text-[#767676] hover:text-[#1F1F1F]`
+
+**List rows**: `hover:bg-[#F6F7ED]` on white card, `divide-y divide-[#E6E6DC]`
+
+**Date / status badges**: `bg-[#EDEDE5] text-[#5D5F58] rounded-full text-[11px] font-semibold px-3 py-1`
+
+**Do NOT** use dark mode classes, teal colors, or the old dark navy theme. The app is always light mode.
+
+## Folder Map
+```
+carethread/
+  app/
+    login/page.tsx           # public login page
+    forbidden/page.tsx       # 403 page
+    (app)/layout.tsx         # shell: sidebar, requires auth
+    (app)/admin/             # admin dashboard + staff management
+    (app)/receptionist/      # patient registration & search
+    (app)/doctor/            # patient list, profiles, visits, AI summary
+    (app)/nurse/             # vitals, medicine tracker
+    (app)/patient/           # read-only portal + dependent switcher
+    api/summary/route.ts     # Gemini route handler (Phase 3)
+  components/
+    Sidebar.tsx              # role-based nav sidebar
+    PatientForm.tsx          # register/edit patient form
+    (Phase 2+) PatientProfile.tsx, VisitForm.tsx, MedicineCycleTable.tsx
+    ui/                      # shadcn primitives
+  lib/
+    supabase/
+      client.ts              # browser client
+      server.ts              # server client (cookies)
+      admin.ts               # service-role client (server-only)
+    auth/
+      requireRole.ts         # role guard for pages/actions
+    ai/
+      summary.ts             # Gemini wrapper (Phase 3)
+  proxy.ts                   # session refresh + auth redirect (Next.js 16 proxy convention)
+  scripts/seed.ts            # seed demo data
+  supabase/migrations/001_init.sql
+  types/database.ts          # generated by supabase gen types
+```
+
+## Commands
+```bash
+npm run dev          # start dev server (http://localhost:3000)
+npm run build        # production build
+npm run lint         # eslint
+npm run seed         # seed demo users + fake patients
+
+# Supabase
+npx supabase db push           # push migrations to linked project
+npx supabase gen types typescript --linked > types/database.ts
+```
+
+## Domain Glossary
+| Term | Meaning |
+|---|---|
+| Patient | A person with a medical record in the system |
+| Family | A household group of patients with a shared address |
+| Visit | A recorded clinical encounter (doctor + patient) |
+| Vitals | Blood pressure, pulse, temperature, weight recorded by nurse/doctor |
+| Medicine cycle | A prescribed course of medication with start/end dates |
+| Summary | An AI-generated plain-language health overview (doctor/nurse only) |
+| Guardian | An adult patient who can view a minor dependent's records |
+| Profile | Supabase auth user metadata: name + role |
+
+## Security Rules (NEVER violate)
+1. **RLS is the real security layer** — every table has RLS enabled
+2. **Always call `requireRole()`** at the top of every protected page, layout and action
+3. **Never use the service-role key** in client code or route handlers that don't need it
+4. **Fake data only** — real patient data must never be stored here
+5. **`getUser()` not `getSession()`** — `getUser` validates the JWT with Supabase; `getSession` does not
+6. **No patient data in logs** — never log PII
+
+## Conventions
+- Server Components fetch data directly via the server Supabase client
+- Mutations go through Server Actions with Zod validation
+- `useActionState` for forms (progressive enhancement)
+- URL-based search/filter state (`?q=...`) – use `searchParams` prop
+- Error boundaries and `notFound()` for missing records
+
+## Phase Checklist
+- [x] Phase 0: Project scaffolded, deps installed, shadcn initialized
+- [x] Phase 1: Auth shell, login, middleware, role-based dashboards, receptionist module, seed script
+- [x] Phase 2: Doctor & nurse clinical modules, family management, Realtime
+- [x] Phase 3: AI summary, patient portal guardian switcher, RLS tests, deploy
+
+## Decisions Log
+| # | Decision | Reason |
+|---|---|---|
+| 1 | Always-dark theme | Medical CRM, reduces eye strain |
+| 2 | shadcn/ui on Tailwind v4 | Latest stack, plan-specified |
+| 3 | `useActionState` for forms | Progressive enhancement, no client state |
+| 4 | `getUser()` not `getSession()` | Security: getUser validates token server-side |
+| 5 | Admin creates staff, receptionist creates patients | Plan requirement, no public signup |
+| 6 | DialogTrigger `asChild` via render prop | Base UI Trigger component replaces root element with child |
+| 7 | Realtime channel with `router.refresh()` | Live multi-clinician updates without manual cache invalidation |
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 ## This is NOT the Next.js you know
