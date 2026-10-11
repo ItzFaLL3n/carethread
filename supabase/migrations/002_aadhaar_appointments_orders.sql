@@ -1,5 +1,5 @@
 -- CareThread: Phase 4 - Aadhaar, Staff Registrations, Appointments, Online Medicine Orders
--- Run via: npx supabase db push or Supabase SQL Editor
+-- Run via: Supabase SQL Editor or npx supabase db push
 
 -- 1. Extend user_role enum
 alter type user_role add value if not exists 'pharmacist';
@@ -58,54 +58,77 @@ alter table appointments enable row level security;
 alter table medicine_orders enable row level security;
 
 -- Appointments RLS policies
+-- Note: app_role()::text is cast to text to avoid Postgres error 55P04 (unsafe use of new enum in same transaction)
+drop policy if exists appointments_read on appointments;
 create policy appointments_read on appointments for select to authenticated
   using (
-    app_role() in ('admin', 'receptionist', 'doctor', 'nurse') 
+    app_role()::text in ('admin', 'receptionist', 'doctor', 'nurse') 
     or can_view_patient(patient_id)
   );
 
+drop policy if exists appointments_insert on appointments;
 create policy appointments_insert on appointments for insert to authenticated
   with check (
-    app_role() in ('admin', 'receptionist')
+    app_role()::text in ('admin', 'receptionist')
     or can_view_patient(patient_id)
   );
 
+drop policy if exists appointments_update on appointments;
 create policy appointments_update on appointments for update to authenticated
   using (
-    app_role() in ('admin', 'doctor', 'receptionist')
+    app_role()::text in ('admin', 'doctor', 'receptionist')
     or can_view_patient(patient_id)
   )
   with check (
-    app_role() in ('admin', 'doctor', 'receptionist')
+    app_role()::text in ('admin', 'doctor', 'receptionist')
     or can_view_patient(patient_id)
   );
 
 -- Medicine orders RLS policies
+drop policy if exists orders_read on medicine_orders;
 create policy orders_read on medicine_orders for select to authenticated
   using (
-    app_role() in ('admin', 'pharmacist', 'doctor', 'nurse')
+    app_role()::text in ('admin', 'pharmacist', 'doctor', 'nurse')
     or can_view_patient(patient_id)
   );
 
+drop policy if exists orders_insert on medicine_orders;
 create policy orders_insert on medicine_orders for insert to authenticated
   with check (
     can_view_patient(patient_id)
-    or app_role() in ('admin', 'pharmacist')
+    or app_role()::text in ('admin', 'pharmacist')
   );
 
+drop policy if exists orders_update on medicine_orders;
 create policy orders_update on medicine_orders for update to authenticated
   using (
-    app_role() in ('admin', 'pharmacist')
+    app_role()::text in ('admin', 'pharmacist')
   )
   with check (
-    app_role() in ('admin', 'pharmacist')
+    app_role()::text in ('admin', 'pharmacist')
   );
 
--- Allow patients to add family history for themselves
+-- Allow patients to record family history
+drop policy if exists fh_patient_insert on family_history;
 create policy fh_patient_insert on family_history for insert to authenticated
   with check (
     can_view_patient(patient_id)
   );
 
--- Add to Realtime
-alter publication supabase_realtime add table appointments, medicine_orders;
+-- Add to Realtime safely (idempotent)
+do $$
+begin
+  if not exists (
+    select 1 from pg_publication_tables 
+    where pubname = 'supabase_realtime' and tablename = 'appointments'
+  ) then
+    alter publication supabase_realtime add table appointments;
+  end if;
+
+  if not exists (
+    select 1 from pg_publication_tables 
+    where pubname = 'supabase_realtime' and tablename = 'medicine_orders'
+  ) then
+    alter publication supabase_realtime add table medicine_orders;
+  end if;
+end $$;

@@ -132,9 +132,14 @@ export async function POST(req: Request) {
 
     let doctorReply = ''
 
-    if (process.env.GEMINI_API_KEY) {
+    const hasValidGeminiKey =
+      process.env.GEMINI_API_KEY &&
+      !process.env.GEMINI_API_KEY.includes('your-') &&
+      !process.env.GEMINI_API_KEY.includes('placeholder')
+
+    if (hasValidGeminiKey) {
       try {
-        const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY })
+        const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! })
         const prompt = `You are Dr. Thread, an empathetic, clinical AI Doctor at CareThread Medical Center.
 A patient says: "${message}".
 Our clinical triage suggests the department: ${triage.department} (Doctor: ${triage.doctorName}, Urgency: ${triage.urgency}).
