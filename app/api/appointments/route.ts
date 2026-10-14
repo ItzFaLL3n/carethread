@@ -46,9 +46,9 @@ export async function POST(req: Request) {
       const appointment = createAppointment({
         patient_id: patient_id || 'pat-emma-1',
         patient_name: patient_name || 'Patient',
-        patient_phone: patient_phone || '+91 98765 01010',
+        patient_phone: patient_phone || '+91 98401 22341',
         doctor_id: doctor_id || 'user-doc-1',
-        doctor_name: doctor_name || 'Dr. Carol Chen',
+        doctor_name: doctor_name || 'Dr. Senthil Nathan',
         department,
         appointment_date,
         appointment_time,

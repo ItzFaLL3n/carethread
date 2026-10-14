@@ -32,9 +32,9 @@ export default function LabTechnicianDashboard() {
   const [tests, setTests] = useState<LabTestItem[]>([
     {
       id: 'lab-01',
-      patientName: 'Emma Wilson',
+      patientName: 'Meenakshi Sundaram',
       testName: 'Lipid Profile (Fasting)',
-      orderedBy: 'Dr. Carol Chen (Cardiology)',
+      orderedBy: 'Dr. Senthil Nathan (Cardiology)',
       sampleStatus: 'completed',
       resultValue: 'Cholesterol: 185 mg/dL, HDL: 52 mg/dL, LDL: 104 mg/dL',
       referenceRange: 'Total < 200 mg/dL',
@@ -43,9 +43,9 @@ export default function LabTechnicianDashboard() {
     },
     {
       id: 'lab-02',
-      patientName: 'James Wilson',
+      patientName: 'Sundaram Ramasamy',
       testName: 'HbA1c & Fasting Glucose',
-      orderedBy: 'Dr. Carol Chen (Cardiology)',
+      orderedBy: 'Dr. Senthil Nathan (Cardiology)',
       sampleStatus: 'processing',
       resultValue: 'Pending analyzer output',
       referenceRange: '< 5.7% (Normal)',
@@ -53,7 +53,7 @@ export default function LabTechnicianDashboard() {
     },
     {
       id: 'lab-03',
-      patientName: 'Liam Johnson',
+      patientName: 'Muthukumar Palanisamy',
       testName: 'Complete Blood Count (CBC) with Platelets',
       orderedBy: 'Internal Medicine Team',
       sampleStatus: 'collected',
@@ -99,14 +99,14 @@ export default function LabTechnicianDashboard() {
           </span>
         </div>
         <h1 className="text-[32px] font-bold text-[#1F1F1F] leading-[40px] tracking-[-0.025em]">
-          Leon Vance&apos;s Laboratory Station
+          Vignesh Loganathan&apos;s Laboratory Station
         </h1>
         <p className="text-[14px] text-[#767676] mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1">
           <span>Senior Clinical Lab Technologist</span>
           <span>•</span>
           <span>Aadhaar: <span className="font-mono">7890 1234 5678</span></span>
           <span>•</span>
-          <span>Phone: +91 98765 00006</span>
+          <span>Phone: +91 98401 00006</span>
         </p>
       </div>
 

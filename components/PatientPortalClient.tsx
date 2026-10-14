@@ -62,8 +62,8 @@ export function PatientPortalClient({
 
   // Booking appointment form state
   const [bookDept, setBookDept] = useState('Cardiology')
-  const [bookDoctor, setBookDoctor] = useState('Dr. Carol Chen (MD, MCI-2018-847291)')
-  const [bookDate, setBookDate] = useState('2026-10-14')
+  const [bookDoctor, setBookDoctor] = useState('Dr. Senthil Nathan (MD, TMC-2018-847291)')
+  const [bookDate, setBookDate] = useState('2026-10-16')
   const [bookTime, setBookTime] = useState('10:30 AM')
   const [bookSymptoms, setBookSymptoms] = useState('')
   const [bookingLoading, setBookingLoading] = useState(false)
@@ -500,7 +500,7 @@ export function PatientPortalClient({
                     <Label htmlFor="fm-name" className="text-[12px] font-semibold">Full Name *</Label>
                     <Input
                       id="fm-name"
-                      placeholder="e.g. Eleanor Wilson"
+                      placeholder="e.g. Kalyani Ramasamy"
                       value={famName}
                       onChange={(e) => setFamName(e.target.value)}
                       required
@@ -693,11 +693,11 @@ export function PatientPortalClient({
                     onChange={(e) => setBookDoctor(e.target.value)}
                     className="w-full h-11 px-3 bg-white border border-[#E6E6DC] rounded-xl text-[14px]"
                   >
-                    <option value="Dr. Carol Chen (MD, Cardiology - MCI-2018-847291)">
-                      Dr. Carol Chen (MD, MCI-2018-847291)
+                    <option value="Dr. Senthil Nathan (MD, Cardiology - TMC-2018-847291)">
+                      Dr. Senthil Nathan (MD, TMC-2018-847291)
                     </option>
-                    <option value="Dr. Arun Kumar (MS, Orthopedics - MCI-2023-994102)">
-                      Dr. Arun Kumar (MS, MCI-2023-994102)
+                    <option value="Dr. Aravind Swaminathan (MS, Orthopedics - TMC-2023-994102)">
+                      Dr. Aravind Swaminathan (MS, TMC-2023-994102)
                     </option>
                     <option value="Dr. Meera Sen (MD, Dermatology - MCI-2019-108221)">
                       Dr. Meera Sen (MD, Dermatology)

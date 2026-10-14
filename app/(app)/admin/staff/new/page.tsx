@@ -39,12 +39,12 @@ export default function NewStaffPage() {
           <form action={formAction} className="space-y-4">
             <div className="space-y-1.5">
               <Label htmlFor="full_name">Full Name</Label>
-              <Input id="full_name" name="full_name" placeholder="Dr. Jane Smith" required className="bg-input/60" />
+              <Input id="full_name" name="full_name" placeholder="Dr. Senthil Nathan" required className="bg-input/60" />
             </div>
 
             <div className="space-y-1.5">
               <Label htmlFor="staff-email">Email</Label>
-              <Input id="staff-email" name="email" type="email" placeholder="jane@carethread.health" required className="bg-input/60" />
+              <Input id="staff-email" name="email" type="email" placeholder="senthil@carethread.health" required className="bg-input/60" />
             </div>
 
             <div className="space-y-1.5">

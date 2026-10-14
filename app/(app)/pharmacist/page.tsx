@@ -11,9 +11,9 @@ export default async function PharmacistDashboard() {
     id: user.id,
     full_name: fullName,
     role: 'pharmacist',
-    gov_reg_number: 'PCI-2019-10822',
+    gov_reg_number: 'TNPC-2019-10822',
     department: 'Clinical Pharmacy & Dispensing',
-    phone: '+91 98765 00005',
+    phone: '+91 98401 00005',
     aadhaar_number: '6789 0123 4567',
   }
 

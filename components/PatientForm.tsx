@@ -36,7 +36,7 @@ export function PatientForm({ action, defaultValues, submitLabel = 'Save Patient
             id="patient-name"
             name="name"
             defaultValue={defaultValues?.name}
-            placeholder="Jane Doe"
+            placeholder="e.g. Meenakshi Sundaram"
             required
             className="bg-input/60"
           />
@@ -106,7 +106,7 @@ export function PatientForm({ action, defaultValues, submitLabel = 'Save Patient
           id="patient-address"
           name="address"
           defaultValue={defaultValues?.address}
-          placeholder="123 Main St, City, State, ZIP"
+          placeholder="e.g. Plot 14, 4th Main Road, Anna Nagar, Chennai"
           className="bg-input/60"
         />
       </div>

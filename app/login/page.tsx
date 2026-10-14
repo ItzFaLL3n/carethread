@@ -285,7 +285,7 @@ export default function LoginPage() {
             >
               <div>
                 <p className="font-semibold text-white leading-tight">Admin</p>
-                <p className="text-[10px] text-[#767676]">Alice Admin</p>
+                <p className="text-[10px] text-[#767676]">Anitha Selvaraj</p>
               </div>
               <ArrowRight className="w-3.5 h-3.5 text-white/40 group-hover:text-white transition-colors" />
             </button>
@@ -296,7 +296,7 @@ export default function LoginPage() {
             >
               <div>
                 <p className="font-semibold text-white leading-tight">Doctor</p>
-                <p className="text-[10px] text-[#767676]">Dr. Carol Chen</p>
+                <p className="text-[10px] text-[#767676]">Dr. Senthil Nathan</p>
               </div>
               <ArrowRight className="w-3.5 h-3.5 text-white/40 group-hover:text-white transition-colors" />
             </button>
@@ -307,7 +307,7 @@ export default function LoginPage() {
             >
               <div>
                 <p className="font-semibold text-white leading-tight">Nurse</p>
-                <p className="text-[10px] text-[#767676]">David Nurse</p>
+                <p className="text-[10px] text-[#767676]">Kavitha Murugan</p>
               </div>
               <ArrowRight className="w-3.5 h-3.5 text-white/40 group-hover:text-white transition-colors" />
             </button>
@@ -318,7 +318,7 @@ export default function LoginPage() {
             >
               <div>
                 <p className="font-semibold text-white leading-tight">Pharmacist</p>
-                <p className="text-[10px] text-[#767676]">Priya Sharma</p>
+                <p className="text-[10px] text-[#767676]">Priya Natarajan</p>
               </div>
               <ArrowRight className="w-3.5 h-3.5 text-white/40 group-hover:text-white transition-colors" />
             </button>
@@ -329,7 +329,7 @@ export default function LoginPage() {
             >
               <div>
                 <p className="font-semibold text-white leading-tight">Lab Tech</p>
-                <p className="text-[10px] text-[#767676]">Leon Vance</p>
+                <p className="text-[10px] text-[#767676]">Vignesh Loganathan</p>
               </div>
               <ArrowRight className="w-3.5 h-3.5 text-white/40 group-hover:text-white transition-colors" />
             </button>
@@ -340,7 +340,7 @@ export default function LoginPage() {
             >
               <div>
                 <p className="font-semibold text-emerald-400 leading-tight">Patient Portal</p>
-                <p className="text-[10px] text-[#A3A3A3]">Emma Wilson</p>
+                <p className="text-[10px] text-[#A3A3A3]">Meenakshi Sundaram</p>
               </div>
               <ArrowRight className="w-3.5 h-3.5 text-emerald-400 group-hover:translate-x-0.5 transition-transform" />
             </button>
@@ -557,7 +557,7 @@ export default function LoginPage() {
                   </Label>
                   <Input
                     id="pat-name"
-                    placeholder="e.g. Emma Wilson"
+                    placeholder="e.g. Meenakshi Sundaram"
                     value={patientName}
                     onChange={(e) => setPatientName(e.target.value)}
                     required

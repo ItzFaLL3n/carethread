@@ -29,7 +29,7 @@ export async function POST(req: Request) {
 
       const order = placeMedicineOrder({
         patient_id: patient_id || 'pat-emma-1',
-        patient_name: patient_name || 'Emma Wilson',
+        patient_name: patient_name || 'Meenakshi Sundaram',
         items,
         total_amount: Number(total_amount) || 0,
         delivery_address,

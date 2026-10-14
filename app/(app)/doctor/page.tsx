@@ -37,10 +37,10 @@ export default async function DoctorDashboard() {
     id: user.id,
     full_name: fullName,
     role: 'doctor',
-    gov_reg_number: 'MCI-2018-847291',
+    gov_reg_number: 'TMC-2018-847291',
     department: 'Cardiology',
-    phone: '+91 98765 00002',
-    address: 'Suite 402, Doctors Enclave, New Delhi',
+    phone: '+91 98401 00002',
+    address: 'Suite 402, Doctors Enclave, Anna Nagar West, Chennai - 600040',
     aadhaar_number: '3456 7890 1234',
     approval_status: 'approved',
   }

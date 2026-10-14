@@ -17,7 +17,7 @@ function evaluateSymptomsRuleBased(query: string): TriageResult {
     const isEmergency = lower.includes('severe') || lower.includes('crushing') || lower.includes('radiat') || lower.includes('arm') || lower.includes('faint')
     return {
       department: 'Cardiology',
-      doctorName: 'Dr. Carol Chen (MD, Cardiology)',
+      doctorName: 'Dr. Senthil Nathan (MD, Cardiology)',
       urgency: isEmergency ? 'Emergency' : 'Urgent',
       explanation: 'Your described symptoms relate to cardiovascular function and thoracic hemodynamics. Evaluation by a cardiologist with an electrocardiogram (ECG) and vitals assessment is recommended.',
       advice: [
@@ -101,7 +101,7 @@ function evaluateSymptomsRuleBased(query: string): TriageResult {
   // Default General Medicine
   return {
     department: 'General Medicine',
-    doctorName: 'Dr. Carol Chen / Internal Medicine Team',
+    doctorName: 'Dr. Senthil Nathan / Internal Medicine Team',
     urgency: lower.includes('fever') || lower.includes('vomit') ? 'Moderate' : 'Routine',
     explanation: 'Your symptoms are best evaluated through a comprehensive primary internal medicine assessment.',
     advice: [

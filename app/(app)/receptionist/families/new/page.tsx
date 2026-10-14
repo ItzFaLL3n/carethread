@@ -50,7 +50,7 @@ export default function NewFamilyPage() {
               <Input
                 id="name"
                 name="name"
-                placeholder="e.g. Miller Family or Henderson Household"
+                placeholder="e.g. Sundaram Household or Palanisamy Family"
                 required
               />
               {state?.fieldErrors?.name && (
@@ -64,7 +64,7 @@ export default function NewFamilyPage() {
                 id="phone"
                 name="phone"
                 type="tel"
-                placeholder="e.g. +1 555-0192"
+                placeholder="e.g. +91 98401 22341"
               />
             </div>
 
@@ -74,7 +74,7 @@ export default function NewFamilyPage() {
                 id="address"
                 name="address"
                 rows={3}
-                placeholder="e.g. 742 Evergreen Terrace, Springfield"
+                placeholder="e.g. Plot 14, 4th Main Road, Anna Nagar West, Chennai"
                 className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               />
             </div>

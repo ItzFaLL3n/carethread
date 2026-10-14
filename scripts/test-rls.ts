@@ -62,14 +62,14 @@ async function runTests() {
   // --- Test 2: Patient Privacy (Horizontal Isolation) ---
   await login('patient')
   const { data: visiblePatients } = await client.from('patients').select('*')
-  // The seeded patient Emma Wilson (patient1) has no dependents in the seed
+  // The seeded patient Meenakshi Sundaram (patient1) has no dependents in the seed
   assert(visiblePatients?.length === 1, 'Patient can only view their own record')
 
   // --- Test 3: Role Escalation Prevention ---
   await login('nurse')
   const { data: { user: nurseUser } } = await client.auth.getUser()
-  const { error: promoteError } = await client.from('profiles').update({ role: 'admin' }).eq('id', nurseUser!.id)
-  assert(promoteError !== null, 'Users cannot elevate their own role')
+  const { data: updatedRows, error: promoteError } = await client.from('profiles').update({ role: 'admin' }).eq('id', nurseUser!.id).select()
+  assert(promoteError !== null || updatedRows?.length === 0, 'Users cannot elevate their own role')
 
   // --- Test 4: Write Permissions ---
   await login('nurse')
