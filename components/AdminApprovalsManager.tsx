@@ -1,12 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import {
   CheckCircle2,
   Clock,
   Loader2,
+  RefreshCw,
   Shield,
   ShieldCheck,
   User,
@@ -28,10 +29,29 @@ export function AdminApprovalsManager({ initialUsers }: AdminApprovalsManagerPro
   const [users, setUsers] = useState<DemoUser[]>(initialUsers)
   const [filter, setFilter] = useState<'pending' | 'staff' | 'all'>('pending')
   const [loadingId, setLoadingId] = useState<string | null>(null)
+  const [refreshing, setRefreshing] = useState(false)
   const [feedback, setFeedback] = useState<{ id: string; msg: string; type: 'success' | 'error' } | null>(null)
 
+  // Fetch live users from the API so newly registered users show without a page reload
+  const fetchUsers = useCallback(async () => {
+    setRefreshing(true)
+    try {
+      const res = await fetch('/api/admin/approvals', { cache: 'no-store' })
+      if (res.ok) {
+        const data = await res.json()
+        setUsers(data.users)
+      }
+    } finally {
+      setRefreshing(false)
+    }
+  }, [])
+
+  // Refresh on mount to pick up any registrations that happened before admin opened the page
+  useEffect(() => {
+    fetchUsers()
+  }, [fetchUsers])
+
   const pendingUsers = users.filter((u) => u.approval_status === 'pending')
-  const approvedUsers = users.filter((u) => u.approval_status === 'approved')
 
   const filtered = users.filter((u) => {
     if (filter === 'pending') return u.approval_status === 'pending'
@@ -52,10 +72,9 @@ export function AdminApprovalsManager({ initialUsers }: AdminApprovalsManagerPro
 
       const data = await res.json()
       if (res.ok) {
-        setUsers((prev) =>
-          prev.map((u) => (u.id === userId ? { ...u, approval_status: 'approved' } : u))
-        )
         setFeedback({ id: userId, msg: 'Registration approved & credentials activated!', type: 'success' })
+        // Re-fetch to get definitive server state
+        await fetchUsers()
       } else {
         setFeedback({ id: userId, msg: data.error || 'Failed to approve', type: 'error' })
       }
@@ -78,10 +97,8 @@ export function AdminApprovalsManager({ initialUsers }: AdminApprovalsManagerPro
       })
 
       if (res.ok) {
-        setUsers((prev) =>
-          prev.map((u) => (u.id === userId ? { ...u, approval_status: 'rejected' } : u))
-        )
         setFeedback({ id: userId, msg: 'Registration rejected.', type: 'success' })
+        await fetchUsers()
       }
     } catch {
       setFeedback({ id: userId, msg: 'Error rejecting registration', type: 'error' })
@@ -118,31 +135,45 @@ export function AdminApprovalsManager({ initialUsers }: AdminApprovalsManagerPro
           </p>
         </div>
 
-        <div className="flex gap-1.5 p-1 bg-[#EDEDE5] rounded-xl border border-[#E6E6DC] shrink-0">
-          <button
-            onClick={() => setFilter('pending')}
-            className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-all ${
-              filter === 'pending' ? 'bg-white text-[#1F1F1F] shadow-sm' : 'text-[#767676] hover:text-[#1F1F1F]'
-            }`}
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Refresh button */}
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={fetchUsers}
+            disabled={refreshing}
+            className="rounded-full border-[#E6E6DC] bg-white hover:bg-[#F4F4F4] text-[#1F1F1F] h-8 px-3 text-[12px] font-semibold"
           >
-            Pending ({pendingUsers.length})
-          </button>
-          <button
-            onClick={() => setFilter('staff')}
-            className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-all ${
-              filter === 'staff' ? 'bg-white text-[#1F1F1F] shadow-sm' : 'text-[#767676] hover:text-[#1F1F1F]'
-            }`}
-          >
-            Staff Accounts
-          </button>
-          <button
-            onClick={() => setFilter('all')}
-            className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-all ${
-              filter === 'all' ? 'bg-white text-[#1F1F1F] shadow-sm' : 'text-[#767676] hover:text-[#1F1F1F]'
-            }`}
-          >
-            All Registered ({users.length})
-          </button>
+            <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${refreshing ? 'animate-spin' : ''}`} />
+            Refresh
+          </Button>
+
+          <div className="flex gap-1.5 p-1 bg-[#EDEDE5] rounded-xl border border-[#E6E6DC]">
+            <button
+              onClick={() => setFilter('pending')}
+              className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-all ${
+                filter === 'pending' ? 'bg-white text-[#1F1F1F] shadow-sm' : 'text-[#767676] hover:text-[#1F1F1F]'
+              }`}
+            >
+              Pending ({pendingUsers.length})
+            </button>
+            <button
+              onClick={() => setFilter('staff')}
+              className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-all ${
+                filter === 'staff' ? 'bg-white text-[#1F1F1F] shadow-sm' : 'text-[#767676] hover:text-[#1F1F1F]'
+              }`}
+            >
+              Staff Accounts
+            </button>
+            <button
+              onClick={() => setFilter('all')}
+              className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-all ${
+                filter === 'all' ? 'bg-white text-[#1F1F1F] shadow-sm' : 'text-[#767676] hover:text-[#1F1F1F]'
+              }`}
+            >
+              All Registered ({users.length})
+            </button>
+          </div>
         </div>
       </div>
 

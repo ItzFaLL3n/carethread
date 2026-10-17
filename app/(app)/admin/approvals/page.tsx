@@ -2,6 +2,9 @@ import { requireRole } from '@/lib/auth/requireRole'
 import { getAllUsers } from '@/lib/demo/store'
 import { AdminApprovalsManager } from '@/components/AdminApprovalsManager'
 
+// Always fetch fresh data — prevent Next.js from caching a stale snapshot
+export const dynamic = 'force-dynamic'
+
 export default async function AdminApprovalsPage() {
   await requireRole(['admin'])
   const users = getAllUsers()
